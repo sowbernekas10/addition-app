@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        maven 'M3'
+    }
+
+    stages {
+
+        stage('Checkout Git') {
+            steps {
+                git branch: 'main',
+                url: 'https://github.com/sowbernekas10/addition-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                bat 'docker build -t addition-app .'
+            }
+        }
+
+        stage('Docker Run') {
+            steps {
+                bat 'docker run --rm addition-app'
+            }
+        }
+    }
+}
